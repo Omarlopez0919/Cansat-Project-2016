@@ -1,0 +1,112 @@
+#include "Wire.h"
+#include "BMP085.h"
+ 
+BMP085 bmp;
+ 
+void setup() {
+  Serial.begin(9600);
+  bmp.begin();  
+}
+ 
+void loop() {
+    Serial.print("Temperature = ");
+    Serial.print(bmp.readTemperature());
+    Serial.println(" *C");
+ 
+    Serial.print("Pressure = ");
+    Serial.print(bmp.readPressure());
+    Serial.println(" Pa");
+ 
+    Serial.println();
+    delay(500);
+}
+18:12
+
+//Codigo CANSAT
+
+//Incluir librerias
+#include <dht.h>;
+#define sensor_pin 5
+dht SENSOR;
+#include <Wire.h>;
+#include <ADXL345.h>;
+ADXL345 adxl;
+
+//Declaracion de variables
+
+int boton_camara=1;
+
+
+void setup() {
+  
+  Serial.begin(9600);
+  pinMode(boton_camara,OUTPUT);
+  digitalWrite(boton_camara,LOW);
+  adxl.powerOn();
+}
+
+void loop() {
+  
+  encender_camara();
+  delay(2000);
+  Serial.println("Tomar Foto 1");
+  tomar_foto();
+  delay(2000);
+  tomar_video();
+  delay(2000);
+  Serial.println("Detener Video");
+  tomar_foto(); //Se ocupa el mismo tiempo para detener video
+  delay(2000);
+  apagar_camara();
+  delay(2000);
+  
+  dht11();
+  acelerometro();
+  
+}
+
+
+void encender_camara(){
+  Serial.println("Encendido de camara");
+  digitalWrite(boton_camara,HIGH);
+  delay(3000);
+  digitalWrite(boton_camra,LOW);
+}
+void tomar_foto(){
+  digitalWrite(boton_camara,HIGH);
+  delay(250):
+  digitalWrite(boton_camra,LOW);
+}
+void tomar_video(){
+  Serial.println("Tomar Video");
+  digitalWrite(boton_camara,HIGH);
+  delay(2000);
+  digitalWrite(boton_camra,LOW);
+}
+void apagar_camara(){
+  Serial.println("Apagar Camara");
+  digitalWrite(boton_camara,HIGH);
+  delay(4000);
+  digitalWrite(boton_camra,LOW);
+}
+void dht11()
+{
+  int dato=SENSOR.read11(sensor_pin);
+  Serial.print("Humedad:  ");
+  Serial.print(SENSOR.humidity, 1);
+  Serial.print("\t");
+  Serial.print("Temperatura:  ");
+  Serial.println(SENSOR.temperature, 1);
+  delay(2000);
+}
+void acelerometro()
+{
+  int x, y, z;
+  adxl.readAccel(&x, &y, &z);
+  Serial.print("x:  ");
+  Serial.print(x);
+  Serial.print(" | y:  ");
+  Serial.print(y);
+  Serial.print(" | z:  ");
+  Serial.println(z);
+}
